@@ -1,0 +1,24 @@
+{
+  "name": "demoblaze-e2e",
+  "version": "1.0.0",
+  "description": "Cypress E2E tests for demoblaze.com login and laptop purchase flows",
+  "scripts": {
+    "test": "cypress run --expose grepTags=@smoke",
+    "cy:open": "cypress open",
+    "test:all": "cypress run",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@cypress/grep": "^7.0.0",
+    "cypress": "^16.2.1",
+    "eslint": "^10.14.0",
+    "eslint-plugin-cypress": "^7.0.2",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.72.1"
+  },
+  "private": true
+}
