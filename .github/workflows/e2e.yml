@@ -1,0 +1,53 @@
+name: E2E
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  e2e:
+    name: Static checks and smoke tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Node LTS
+        uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+
+      # Runs `npm ci` and caches both the npm cache and the Cypress binary;
+      # tests run in the last step, after the static checks.
+      - name: Install dependencies
+        uses: cypress-io/github-action@v7
+        with:
+          runTests: false
+
+      - name: Type check
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Run smoke suite
+        uses: cypress-io/github-action@v7
+        with:
+          install: false
+          command: npm test
+
+      - name: Upload screenshots of failed tests
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
+          if-no-files-found: ignore
+          retention-days: 7
