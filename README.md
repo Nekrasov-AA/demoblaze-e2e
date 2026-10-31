@@ -62,7 +62,7 @@ Cypress app. The first run downloads about 200 MB and takes a few minutes.
 | `npm run lint` | Runs ESLint. |
 
 To use the interactive app: run `npm run cy:open`, choose **E2E Testing**, pick a browser,
-click **Start E2E Testing in <browser>**, then click a spec file (`auth.cy.ts` or `purchase.cy.ts`).
+click **Start E2E Testing in Chrome** (or the browser you picked), then click a spec file (`auth.cy.ts` or `purchase.cy.ts`).
 You can watch each step and hover over a command in the left panel to see the page at that
 moment.
 
@@ -167,8 +167,8 @@ confirmation, and check that the cart is empty afterwards.
 
 - **The confirmation date shows the previous month.** The page builds the date with
   JavaScript's `getMonth()`, which counts months from 0. On 30 October the confirmation
-  shows `30/9/2026`. The skipped `@extended` test asserts the correct date and fails
-  against the current site.
+  shows `30/9/2026`. The skipped `@extended` test asserts the correct date; it fails when un-skipped, which
+  confirms the bug.
 - **An order can be placed with an empty cart.** The confirmation shows `Amount: 0 USD`.
 - **The card number is not validated.** Only Name and Credit card are required, and the
   card field accepts any text, including letters.
