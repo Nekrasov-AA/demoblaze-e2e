@@ -248,11 +248,12 @@ I used AI tools throughout this task and want to be specific about how.
   decided the scope, what is essential to test and why, and the test strategy (API only
   for test data, a unique user per test, intercepts only for waiting); reviewed and
   approved each implementation plan before coding, then reviewed every generated change
-  before keeping it; ran the tests and checked them in the interactive runner.
+  before keeping it; ran the tests and checked them in the interactive runner, where I found the Chrome-only
+  alert failure described under "Flakiness found and fixed".
 - **Claude Code (in VS Code)** implemented the approved plans: the test code, the CI
   workflow and this README. It proposed implementation details such as the page-object
-  shape and how alerts are captured, and it traced the two flaky failures to their root
-  causes using failure screenshots and the site's JavaScript.
+  shape and how alerts are captured, it traced the two intermittent failures to their root causes using failure screenshots
+  and the site's JavaScript, and wrote the diagnostic that located the Chrome alert issue.
 - **Claude (chat)** helped me plan the phases, write the prompts, and review and explain
   the generated code and Cypress concepts.
 - **ChatGPT** gave second-opinion reviews of the plans; I adopted some suggestions and
