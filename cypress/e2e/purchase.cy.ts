@@ -16,9 +16,12 @@ describe('Purchase', () => {
     cy.visit('/')
 
     cy.intercept('POST', '**/login').as('login')
+    cy.intercept('POST', '**/check').as('check')
     header.loginLink().click()
     loginModal.login(user)
     cy.wait('@login')
+    // Login reloads the page; the welcome text appears only after the /check response.
+    cy.wait('@check')
     header.welcomeUser().should('have.text', `Welcome ${user.username}`)
 
     cy.intercept('POST', '**/bycat').as('byCategory')

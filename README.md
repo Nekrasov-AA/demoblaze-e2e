@@ -206,9 +206,9 @@ exploit them against the live site.
 
 ## Flakiness found and fixed
 
-The first two showed up as intermittent failures. I found the cause from failure
-screenshots and the site's JavaScript, then confirmed each fix with repeated runs with
-retries turned off. The third appeared only in one browser mode.
+Most showed up as intermittent failures. I found the cause from failure screenshots, the
+Command Log and the site's JavaScript, then confirmed each fix with repeated runs with
+retries turned off. The alert problem appeared only in one browser mode.
 
 - **Bootstrap modal focus lost keystrokes.** When a Bootstrap modal finishes its fade-in,
   it moves focus to the modal itself. Cypress types faster than a person, so part of the
@@ -223,6 +223,9 @@ retries turned off. The third appeared only in one browser mode.
   Cypress's own alert override was not applied to the page; I did not find out why. Headless
   runs and Electron were not affected. The fix: stub `window.alert` on the current page
   right before each action that triggers an alert, which works in every browser and mode.
+- **The welcome text appeared after the assertion timed out.** Login reloads the page, and
+  `Welcome <user>` is rendered only after the `/check` response, which was sometimes slower
+  than 4 s. The fix: wait for that `/check` call before asserting the text.
 
 Headless runs still retry a failed test once. That is a safety net for the shared demo
 site, not a way to hide these problems.

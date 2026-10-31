@@ -20,9 +20,12 @@ describe('Authentication', { tags: '@smoke' }, () => {
     cy.get('@alert').should('have.been.calledWith', 'Sign up successful.')
 
     cy.intercept('POST', '**/login').as('login')
+    cy.intercept('POST', '**/check').as('check')
     header.loginLink().click()
     loginModal.login(user)
     cy.wait('@login')
+    // Login reloads the page; the welcome text appears only after the /check response.
+    cy.wait('@check')
 
     header.welcomeUser().should('have.text', `Welcome ${user.username}`)
   })
