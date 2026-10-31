@@ -146,8 +146,9 @@ confirmation, and check that the cart is empty afterwards.
 
 - **Standalone API tests.** The task is about UI flows. The API is a means to set up data,
   not a subject of testing here.
-- **Cross-browser runs.** CI uses Cypress's built-in Electron browser, the same one used
-  locally, so a CI failure can be reproduced locally.
+- **Cross-browser runs.** CI runs the suite in Chrome only. Locally, `npm test` uses
+  Cypress's built-in Electron browser, so it works without Chrome installed. To reproduce
+  a CI run exactly, use `npm test -- --browser chrome`.
 - **Other parts of the site:** other categories and products, pagination, removing items
   from the cart, logout, and the Contact and About us dialogs. They are outside the two
   requested flows.
@@ -158,7 +159,6 @@ confirmation, and check that the cart is empty afterwards.
 - The task asks to create an account before proceeding. I created the account
   `Artem_Nekrasov` manually and used it to explore the site by hand. The tests don't use
   it. They create their own users through the API, so they stay isolated and repeatable.
-- The task doesn't name a laptop, so I chose MacBook Pro.
 - The tests run against the live public site. There is no local or staging copy.
 
 ## Issues found
@@ -234,7 +234,7 @@ site, not a way to hide these problems.
 - Cart: several products and the total, the same product added twice, deleting a row.
 - Logout, staying logged in after a reload, and an expired session.
 - An anonymous cart followed by logging in.
-- A browser matrix in CI (Chrome and Firefox).
+- A browser matrix in CI (add Firefox and Edge next to Chrome).
 - API contract tests for signup, login and cart.
 - The unverified security issues above, in an environment where that testing is allowed.
 - Basic accessibility checks on the login, signup and order dialogs.

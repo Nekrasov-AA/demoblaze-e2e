@@ -41,7 +41,10 @@ jobs:
         uses: cypress-io/github-action@v7
         with:
           install: false
-          command: npm test
+          # Chrome instead of the default Electron, which Cypress 16 marks as deprecated.
+          # The extra argument is appended to the npm script, so the @smoke filter stays
+          # in package.json.
+          command: npm test -- --browser chrome
 
       - name: Upload screenshots of failed tests
         if: failure()
