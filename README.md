@@ -79,11 +79,6 @@ moment.
 
 ### Troubleshooting
 
-- **"Cypress failed to start" with `bad option: --no-sandbox` in the VS Code terminal.**
-  VS Code sets the variable `ELECTRON_RUN_AS_NODE`, which breaks the Cypress app. Use a
-  terminal outside VS Code, or clear the variable first:
-  - macOS: `unset ELECTRON_RUN_AS_NODE`
-  - Windows (PowerShell): `Remove-Item Env:ELECTRON_RUN_AS_NODE`
 - **Windows: "running scripts is disabled on this system" when running `npm`.**
   PowerShell blocks npm's script by default on some machines. Run
   `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` once, or use Command Prompt
@@ -252,7 +247,7 @@ I used AI tools throughout this task and want to be specific about how.
   for test data, a unique user per test, intercepts only for waiting); reviewed and
   approved each implementation plan before coding, then reviewed every generated change
   before keeping it; ran the tests and checked them in the interactive runner, where I found the Chrome-only
-  alert failure described under "Flakiness found and fixed".
+  alert failure and the slow `/check` timeout described under "Flakiness found and fixed".
 - **Claude Code (in VS Code)** implemented the approved plans: the test code, the CI
   workflow and this README. It proposed implementation details such as the page-object
   shape and how alerts are captured, it traced the two intermittent failures to their root causes using failure screenshots
