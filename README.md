@@ -134,9 +134,9 @@ confirmation, and check that the cart is empty afterwards.
   same value in the cart row, the cart total and the confirmation.
 - **No fixed waits.** Tests wait for network calls or for visible UI states, never for a
   number of milliseconds.
-- **Native alerts.** The site reports most results with browser alerts. I record them with
-  `cy.on('window:alert')`, which keeps working when the page reloads, and check the exact
-  text after the related network call.
+- **Native alerts.** The site reports most results with browser alerts. I replace
+  `window.alert` with a stub on the current page right before the action, and check the
+  exact text after the related network call.
 - **Thin page objects.** `cypress/support/pages/` holds selectors and small actions.
   Assertions stay in the spec files, so each test reads as a list of checks.
 - **Tags.** `@smoke` is the core suite that runs in CI. `@extended` is for extra tests,
@@ -196,12 +196,19 @@ exploit them against the live site.
 - **The cart is cleared by username alone.** `deletecart` takes a username, not a session
   token. If the server doesn't check ownership, anyone could empty another user's cart.
   Not verified against the server.
+- **Visitors without cookies share one cart (privacy).** For anonymous visitors the cart is
+  keyed by the whole cookie string. Only the home page creates the `user` cookie, so a
+  visitor who opens a product or cart link directly has no cookies and gets the cart with
+  the empty key, shared by everyone in the same situation. I observed it holding more than
+  2,500 items from other visitors, and growing. Anyone can see what others put there. An
+  anonymous purchase clears the cart by the same key, so it would likely empty the shared
+  cart for everyone. I did not try that.
 
 ## Flakiness found and fixed
 
-Both problems showed up as intermittent failures. I found the cause from failure
+The first two showed up as intermittent failures. I found the cause from failure
 screenshots and the site's JavaScript, then confirmed each fix with repeated runs with
-retries turned off.
+retries turned off. The third appeared only in one browser mode.
 
 - **Bootstrap modal focus lost keystrokes.** When a Bootstrap modal finishes its fade-in,
   it moves focus to the modal itself. Cypress types faster than a person, so part of the
@@ -211,6 +218,11 @@ retries turned off.
 - **SweetAlert ignored an early OK click.** The purchase confirmation becomes clickable
   500 ms after it opens. An earlier click on OK closes the dialog without running the
   redirect. The fix: wait for the dialog's `visible` class before clicking OK.
+- **Native alerts were not captured in Chrome open mode.** In `cypress open` with Chrome,
+  the site's alerts appeared as real dialogs and the tests failed. A diagnostic showed that
+  Cypress's own alert override was not applied to the page; I did not find out why. Headless
+  runs and Electron were not affected. The fix: stub `window.alert` on the current page
+  right before each action that triggers an alert, which works in every browser and mode.
 
 Headless runs still retry a failed test once. That is a safety net for the shared demo
 site, not a way to hide these problems.

@@ -49,9 +49,10 @@ cypress.config.ts
   or on UI state via assertions (`should('be.visible')` etc.).
 - Never assign Cypress commands to variables (`const el = cy.get(...)`). Use chaining,
   `.then()`, or aliases.
-- Native alerts: use `cy.stubAlert()` (`cy.on('window:alert', ...)` with a stub aliased
-  `@alert`; it survives page reloads). Assert `calledWith` after waiting for the related
-  network call.
+- Native alerts: use `cy.stubAlert()` after the page has loaded and right before the
+  action; it stubs `window.alert` on the current window as `@alert` (Cypress's own
+  override was not applied in Chrome open mode). A new page needs a new call. Assert
+  `calledWith` after waiting for the related network call.
 - Always pass the HTTP method to `cy.intercept` (e.g. `cy.intercept('POST', '**/login')`):
   the API is cross-origin, so every POST is preceded by a CORS preflight OPTIONS request.
 - API errors come back as HTTP 200 with `{"errorMessage": "..."}`. Never treat status 200

@@ -5,8 +5,8 @@ import { signupModal } from '../support/pages/signup-modal'
 
 describe('Authentication', { tags: '@smoke' }, () => {
   beforeEach(() => {
-    cy.stubAlert()
     cy.visit('/')
+    cy.stubAlert()
   })
 
   it('signs up a new user who can then log in', () => {

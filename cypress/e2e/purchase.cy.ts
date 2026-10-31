@@ -10,10 +10,6 @@ import { orderModal, purchaseConfirmation } from '../support/pages/order-modal'
 const PRODUCT = 'MacBook Pro'
 
 describe('Purchase', () => {
-  beforeEach(() => {
-    cy.stubAlert()
-  })
-
   it('buys a laptop and shows the paid amount in the confirmation', { tags: '@smoke' }, () => {
     const user = buildUser()
     cy.createUser(user)
@@ -33,6 +29,7 @@ describe('Purchase', () => {
     homePage.productLink(PRODUCT).click()
     cy.wait('@viewProduct')
     productPage.name().should('have.text', PRODUCT)
+    cy.stubAlert()
 
     productPage.readPrice().then((price) => {
       cy.intercept('POST', '**/addtocart').as('addToCart')
@@ -73,7 +70,12 @@ describe('Purchase', () => {
   })
 
   it('requires name and credit card to place an order', { tags: '@smoke' }, () => {
+    // The anonymous cart is keyed by the whole cookie string. Without a cookie the key is
+    // empty, which is one cart shared by every cookieless visitor. The home page normally
+    // sets this cookie; cart.html does not.
+    cy.setCookie('user', crypto.randomUUID())
     cy.visit('/cart.html')
+    cy.stubAlert()
 
     cartPage.placeOrderButton().click()
     orderModal.fill({ ...order, name: '', card: '' })
@@ -95,6 +97,8 @@ describe('Purchase', () => {
     cy.intercept('POST', '**/view').as('viewProduct')
     homePage.productLink(PRODUCT).click()
     cy.wait('@viewProduct')
+    // Not asserted here, but without a stub the real "Product added." dialog blocks the run.
+    cy.stubAlert()
 
     cy.intercept('POST', '**/addtocart').as('addToCart')
     productPage.addToCartButton().click()

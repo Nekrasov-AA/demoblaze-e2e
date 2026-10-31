@@ -9,7 +9,10 @@ declare global {
     interface Chainable {
       /** Creates a user via POST /signup and fails if the API returns an errorMessage. */
       createUser(user: User): Chainable<void>
-      /** Records every native alert in a stub aliased as `@alert`. */
+      /**
+       * Stubs `alert` on the current window as `@alert`. Call it after the page has loaded,
+       * right before the action that triggers the alert; a new page needs a new call.
+       */
       stubAlert(): Chainable<void>
     }
   }
@@ -27,7 +30,10 @@ Cypress.Commands.add('createUser', (user: User) => {
 })
 
 Cypress.Commands.add('stubAlert', () => {
-  // Listening to the window:alert event (instead of stubbing window.alert) survives page
-  // reloads: login reloads the page and the product/cart pages are full page loads.
-  cy.on('window:alert', cy.stub().as('alert'))
+  // Not cy.on('window:alert'): in Chrome open mode Cypress's own alert override was not
+  // applied (verified with a diagnostic), so real dialogs appeared and nothing was recorded.
+  // Stubbing the current window directly works in every browser and mode.
+  cy.window().then((win) => {
+    cy.stub(win, 'alert').as('alert')
+  })
 })
