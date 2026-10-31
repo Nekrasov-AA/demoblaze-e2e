@@ -229,4 +229,21 @@ site, not a way to hide these problems.
 
 ## AI usage
 
-TBD
+I used AI tools throughout this task and want to be specific about how.
+
+- **What I did myself:** explored the site manually in DevTools before writing any code
+  (API endpoints, password encoding, error responses, most of the issues listed above);
+  decided the scope, what is essential to test and why, and the test strategy (API only
+  for test data, a unique user per test, intercepts only for waiting); reviewed and
+  approved each implementation plan before coding, then reviewed every generated change
+  before keeping it; ran the tests and checked them in the interactive runner.
+- **Claude Code (in VS Code)** implemented the approved plans: the test code, the CI
+  workflow and this README. It proposed implementation details such as the page-object
+  shape and how alerts are captured, and it traced the two flaky failures to their root
+  causes using failure screenshots and the site's JavaScript.
+- **Claude (chat)** helped me plan the phases, write the prompts, and review and explain
+  the generated code and Cypress concepts.
+- **ChatGPT** gave second-opinion reviews of the plans; I adopted some suggestions and
+  rejected others.
+- [`CLAUDE.md`](CLAUDE.md) contains the instructions and conventions I gave the coding
+  agent.
